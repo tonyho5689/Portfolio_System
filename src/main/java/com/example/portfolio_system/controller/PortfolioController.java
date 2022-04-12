@@ -12,7 +12,7 @@ public class PortfolioController {
 
     @GetMapping("/initTicker")
     public String initTicker() {
-        securitiesService.createTicker(1, "TSLA");
+        securitiesService.createTicker("TSLA", 700.0);
         return "DONE";
     }
 

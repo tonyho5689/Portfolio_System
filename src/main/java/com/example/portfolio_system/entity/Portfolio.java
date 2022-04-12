@@ -20,7 +20,7 @@ public class Portfolio {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long securitiesId;
-    private Long tickerId;
+    private String tickerId;
     private Double nav;
     private Double marketValue;
     private Integer quantity;

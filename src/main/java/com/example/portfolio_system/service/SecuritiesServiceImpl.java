@@ -11,10 +11,10 @@ public class SecuritiesServiceImpl implements SecuritiesService {
     private SecuritiesRepository securitiesRepo;
 
     @Override
-    public void createTicker(Integer tickerId, String tickerName) {
+    public Securities createTicker(String tickerId, Double price) {
         Securities entity = new Securities();
         entity.setTickerId(tickerId);
-        entity.setTickerName(tickerName);
-        securitiesRepo.save(entity);
+        entity.setPrice(price);
+        return securitiesRepo.save(entity);
     }
 }

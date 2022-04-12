@@ -20,7 +20,6 @@ public class Securities {
     @Id
     @Column(nullable = false)
     @NotNull
-    private Integer tickerId;
-    private String tickerName;
+    private String tickerId;
     private Double price;
 }
