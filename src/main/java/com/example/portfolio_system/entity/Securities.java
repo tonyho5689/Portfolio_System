@@ -22,4 +22,5 @@ public class Securities {
     @NotNull
     private String tickerId;
     private Double price;
+    private Double deltaT;
 }
