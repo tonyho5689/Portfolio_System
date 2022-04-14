@@ -5,10 +5,22 @@ import com.example.portfolio_system.repository.SecuritiesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 public class SecuritiesServiceImpl implements SecuritiesService {
     @Autowired
     private SecuritiesRepository securitiesRepo;
+
+    @PostConstruct
+    private void postConstruct() {
+        Securities aapl = new Securities("AAPL", 100.0, 0.25, 0.25);
+        Securities tsla = new Securities("TSLA", 700.0, 0.25, 0.25);
+        List<Securities> tickerList = Arrays.asList(aapl, tsla);
+        securitiesRepo.saveAll(tickerList);
+    }
 
     @Override
     public Securities createTicker(String tickerId, Double price) {

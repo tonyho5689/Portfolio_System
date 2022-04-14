@@ -18,18 +18,8 @@ public class DbInit {
     private final Double RANGE_MAX = 2.0;
     final Random R = new Random();
     @Autowired
-    private PortfolioRepository portfolioRepository;
-    @Autowired
     private SecuritiesRepository securitiesRepository;
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @PostConstruct
-    private void postConstruct() {
-        Securities aapl = new Securities("AAPL", 100.0, 0.25);
-        Securities tsla = new Securities("TSLA", 700.0, 0.25);
-        List<Securities> tickerList = Arrays.asList(aapl, tsla);
-        securitiesRepository.saveAll(tickerList);
-    }
 
     public int getSchedule() {
         double randomTime = RANGE_MIN + (RANGE_MAX - RANGE_MIN) * R.nextDouble();
