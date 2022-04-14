@@ -14,8 +14,8 @@ import java.util.*;
 @Component
 public class DbInit {
     Logger logger = LoggerFactory.getLogger(DbInit.class);
-    private final Double RANGE_MIN = 0.5;
-    private final Double RANGE_MAX = 2.0;
+    private final double RANGE_MIN = 0.5;
+    private final double RANGE_MAX = 2.0;
     final Random R = new Random();
     @Autowired
     private SecuritiesRepository securitiesRepository;
@@ -25,11 +25,15 @@ public class DbInit {
         double randomTime = RANGE_MIN + (RANGE_MAX - RANGE_MIN) * R.nextDouble();
         int time = (int) (randomTime * 1000);
         double deltaT = (double) time / 1000;
+
+        logger.info("scheduled update after {} seconds", deltaT);
         Securities ticker = securitiesRepository.findById("TSLA").get();
         ticker.setDeltaT(deltaT);
+        Securities ticker2 = securitiesRepository.findById("AAPL").get();
+        ticker2.setDeltaT(deltaT);
         securitiesRepository.save(ticker);
+        securitiesRepository.save(ticker2);
 
-        logger.info("scheduled job at {} with {}", securitiesRepository.findById("TSLA").get().getDeltaT(), Double.valueOf(time));
         return time;
     }
 

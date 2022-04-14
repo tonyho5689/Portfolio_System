@@ -14,10 +14,11 @@ public class SecuritiesServiceImpl implements SecuritiesService {
     @Autowired
     private SecuritiesRepository securitiesRepo;
 
+    //Init ticker for securities
     @PostConstruct
     private void postConstruct() {
-        Securities aapl = new Securities("AAPL", 100.0, 0.25, 0.25);
-        Securities tsla = new Securities("TSLA", 700.0, 0.25, 0.25);
+        Securities aapl = new Securities("AAPL", 100.0, null, null);
+        Securities tsla = new Securities("TSLA", 700.0, null, null);
         List<Securities> tickerList = Arrays.asList(aapl, tsla);
         securitiesRepo.saveAll(tickerList);
     }
