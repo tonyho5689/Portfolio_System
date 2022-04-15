@@ -1,7 +1,7 @@
 package com.example.portfolio_system;
 
-import com.example.portfolio_system.entity.SecurityA;
-import com.example.portfolio_system.repository.SecurityARepository;
+import com.example.portfolio_system.entity.Stock;
+import com.example.portfolio_system.repository.StockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class DbInit {
     private final double RANGE_MAX = 2.0;
     final Random R = new Random();
     @Autowired
-    private SecurityARepository securitiesRepository;
+    private StockRepository securitiesRepository;
 
 
     public int getSchedule() {
@@ -25,9 +25,9 @@ public class DbInit {
         double deltaT = (double) time / 1000;
 
         logger.info("scheduled update after {} seconds", deltaT);
-        SecurityA ticker = securitiesRepository.findById("TSLA").get();
+        Stock ticker = securitiesRepository.findById("TSLA").get();
         ticker.setDeltaT(deltaT);
-        SecurityA ticker2 = securitiesRepository.findById("AAPL").get();
+        Stock ticker2 = securitiesRepository.findById("AAPL").get();
         ticker2.setDeltaT(deltaT);
         securitiesRepository.save(ticker);
         securitiesRepository.save(ticker2);

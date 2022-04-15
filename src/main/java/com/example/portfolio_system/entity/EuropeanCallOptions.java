@@ -7,30 +7,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Random;
+import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SecurityA {
-
+public class EuropeanCallOptions {
     @Id
     @Column(nullable = false)
     @NotNull
     private String tickerId;
-    private Double price;
-    //random field
     private Double deltaT;
-    private Double epsilon;
-    //static fields (remain unchanged)
-    private Double mu;
-    private Double annualizedSD;
 
+    @ManyToOne
+    @JoinColumn(name = "stock")
+    private Stock stock;
 
-    @PostUpdate
-    public void updateLog() {
-        System.out.println(this);
-    }
 }

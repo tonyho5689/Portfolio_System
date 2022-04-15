@@ -1,6 +1,6 @@
 package com.example.portfolio_system;
 
-import com.example.portfolio_system.service.SecuritiesService;
+import com.example.portfolio_system.service.StockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class SecurityAConfig implements SchedulingConfigurer {
     Logger logger = LoggerFactory.getLogger(SecurityAConfig.class);
 
     @Autowired
-    private SecuritiesService securitiesService;
+    private StockService stockService;
 
     final static double RANGE_MIN = 0.5;
     final static double RANGE_MAX = 2.0;
@@ -46,7 +46,7 @@ public class SecurityAConfig implements SchedulingConfigurer {
                     public void run() {
                         time = (int) ((RANGE_MIN + (RANGE_MAX - RANGE_MIN) * R.nextDouble()) * 1000);
                         double deltaT = (double) time / 1000;
-                        securitiesService.updateTickersSecAByDiscreteTime(deltaT);
+                        stockService.updateStock(deltaT);
                     }
                 },
                 new Trigger() {
