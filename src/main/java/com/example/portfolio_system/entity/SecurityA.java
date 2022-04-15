@@ -24,7 +24,7 @@ public class SecurityA {
     //random field
     private Double deltaT;
     private Double epsilon;
-    //static fields
+    //static fields (remain unchanged)
     private Double mu;
     private Double annualizedSD;
 

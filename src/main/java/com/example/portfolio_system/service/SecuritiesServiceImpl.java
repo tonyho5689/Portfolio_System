@@ -47,14 +47,18 @@ public class SecuritiesServiceImpl implements SecuritiesService {
     @Override
     public List<SecurityA> updateTickersSecAByDiscreteTime(double deltaT) {
 
+        Random r = new Random();
+
         //For validation purpose
         List<SecurityA> expectedTickers = new ArrayList<>();
 
         List<SecurityA> tickers = securityARepository.findAll();
         tickers.forEach(ticker -> {
-            ticker.setDeltaT(deltaT);
-            BrownianMotion brownianMotion = new BrownianMotion(ticker.getPrice(), deltaT, new Random().nextGaussian(), ticker.getMu(), ticker.getAnnualizedSD());
+            double epsilon = r.nextGaussian();
+            BrownianMotion brownianMotion = new BrownianMotion(ticker.getPrice(), deltaT, epsilon, ticker.getMu(), ticker.getAnnualizedSD());
             ticker.setPrice(brownianMotion.getUpdatedPrice());
+            ticker.setDeltaT(deltaT);
+            ticker.setEpsilon(epsilon);
             expectedTickers.add(ticker);
             securityARepository.save(ticker);
         });
