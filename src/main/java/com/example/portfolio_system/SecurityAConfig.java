@@ -1,5 +1,9 @@
 package com.example.portfolio_system;
 
+import com.example.portfolio_system.service.SecuritiesService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.Trigger;
@@ -14,14 +18,18 @@ import java.util.concurrent.Executors;
 
 @Configuration
 @EnableScheduling
-public class SecuritiesConfig implements SchedulingConfigurer {
+public class SecurityAConfig implements SchedulingConfigurer {
 
+    Logger logger = LoggerFactory.getLogger(SecurityAConfig.class);
+
+    @Autowired
+    private SecuritiesService securitiesService;
+
+    final static double RANGE_MIN = 0.5;
+    final static double RANGE_MAX = 2.0;
+    final Random R = new Random();
     public static int time;
 
-    @Bean
-    public DbInit myBean() {
-        return new DbInit();
-    }
 
     @Bean(destroyMethod = "")
     public Executor taskExecutor() {
@@ -36,8 +44,9 @@ public class SecuritiesConfig implements SchedulingConfigurer {
                 new Runnable() {
                     @Override
                     public void run() {
-                        time = myBean().getSchedule();
-
+                        time = (int) ((RANGE_MIN + (RANGE_MAX - RANGE_MIN) * R.nextDouble()) * 1000);
+                        double deltaT = (double) time / 1000;
+                        securitiesService.updateTickersSecAByDiscreteTime(deltaT);
                     }
                 },
                 new Trigger() {

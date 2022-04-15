@@ -1,33 +1,63 @@
 package com.example.portfolio_system.service;
 
-import com.example.portfolio_system.entity.Securities;
-import com.example.portfolio_system.repository.SecuritiesRepository;
+import com.example.portfolio_system.entity.SecurityA;
+import com.example.portfolio_system.formular.BrownianMotion;
+import com.example.portfolio_system.repository.SecurityARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class SecuritiesServiceImpl implements SecuritiesService {
     @Autowired
-    private SecuritiesRepository securitiesRepo;
+    private SecurityARepository securityARepository;
 
     //Init ticker for securities
     @PostConstruct
     private void postConstruct() {
-        Securities aapl = new Securities("AAPL", 100.0, null, null);
-        Securities tsla = new Securities("TSLA", 700.0, null, null);
-        List<Securities> tickerList = Arrays.asList(aapl, tsla);
-        securitiesRepo.saveAll(tickerList);
+        SecurityA tickerA = SecurityA.builder()
+                .tickerId("AAPL")
+                .price(100.0)
+                .mu(0.5)
+                .annualizedSD(0.3)
+                .build();
+
+        SecurityA tickerB = SecurityA.builder()
+                .tickerId("TSLA")
+                .price(700.0)
+                .mu(0.8)
+                .annualizedSD(0.9)
+                .build();
+
+        List<SecurityA> tickerList = Arrays.asList(tickerA, tickerB);
+
+        securityARepository.saveAll(tickerList);
     }
 
     @Override
-    public Securities createTicker(String tickerId, Double price) {
-        Securities entity = new Securities();
+    public SecurityA createTicker(String tickerId, Double price) {
+        SecurityA entity = new SecurityA();
         entity.setTickerId(tickerId);
         entity.setPrice(price);
-        return securitiesRepo.save(entity);
+        return securityARepository.save(entity);
+    }
+
+    @Override
+    public List<SecurityA> updateTickersSecAByDiscreteTime(double deltaT) {
+
+        //For validation purpose
+        List<SecurityA> expectedTickers = new ArrayList<>();
+
+        List<SecurityA> tickers = securityARepository.findAll();
+        tickers.forEach(ticker -> {
+            ticker.setDeltaT(deltaT);
+            BrownianMotion brownianMotion = new BrownianMotion(ticker.getPrice(), deltaT, new Random().nextGaussian(), ticker.getMu(), ticker.getAnnualizedSD());
+            ticker.setPrice(brownianMotion.getUpdatedPrice());
+            expectedTickers.add(ticker);
+            securityARepository.save(ticker);
+        });
+        return expectedTickers;
     }
 }

@@ -14,20 +14,23 @@ import java.util.Random;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Securities {
+public class SecurityA {
 
     @Id
     @Column(nullable = false)
     @NotNull
     private String tickerId;
     private Double price;
+    //random field
     private Double deltaT;
     private Double epsilon;
+    //static fields
+    private Double mu;
+    private Double annualizedSD;
+
 
     @PostUpdate
     public void updateLog() {
-        Random generator = new Random();
-        this.epsilon = generator.nextGaussian();
-        System.out.println("ticker: " + this.tickerId + " with epsilon:" + this.epsilon);
+        System.out.println(this);
     }
 }
