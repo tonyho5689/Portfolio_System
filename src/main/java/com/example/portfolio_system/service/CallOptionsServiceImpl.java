@@ -1,6 +1,6 @@
 package com.example.portfolio_system.service;
 
-import com.example.portfolio_system.entity.EuropeanOptions;
+import com.example.portfolio_system.entity.EuropeanCallOptions;
 import com.example.portfolio_system.entity.Stock;
 import com.example.portfolio_system.repository.EuropeanCallOptionsRepository;
 import com.example.portfolio_system.repository.StockRepository;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class OptionsServiceImpl implements OptionsService {
+public class CallOptionsServiceImpl implements CallOptionsService {
 
     @Autowired
     private EuropeanCallOptionsRepository europeanCallOptionsRepository;
@@ -23,53 +23,53 @@ public class OptionsServiceImpl implements OptionsService {
     private StockService stockService;
 
     @Override
-    public EuropeanOptions createOptions(EuropeanOptions europeanOptions) {
+    public EuropeanCallOptions createOptions(EuropeanCallOptions europeanCallOptions) {
 
         // duplicated options validation
-        Optional<EuropeanOptions> optionalOptions = getOptionsById(europeanOptions.getTickerId());
+        Optional<EuropeanCallOptions> optionalOptions = getOptionsById(europeanCallOptions.getTickerId());
         if (optionalOptions.isPresent()) {
             throw new IllegalStateException("Duplicated options when createOptions");
         }
 
         // stock existence validation
-        Optional<Stock> optionalStock = stockService.getStockById(europeanOptions.getStock().getTickerId());
+        Optional<Stock> optionalStock = stockService.getStockById(europeanCallOptions.getStock().getTickerId());
         if (optionalStock.isEmpty()) {
             throw new IllegalStateException("Stock is not found when createOptions");
         }
 
-        return europeanCallOptionsRepository.save(europeanOptions);
+        return europeanCallOptionsRepository.save(europeanCallOptions);
     }
 
     @Override
-    public Optional<EuropeanOptions> getOptionsById(@NotNull String optionsId) {
+    public Optional<EuropeanCallOptions> getOptionsById(@NotNull String optionsId) {
 
-        Optional<EuropeanOptions> optionalOptions = europeanCallOptionsRepository.findById(optionsId);
+        Optional<EuropeanCallOptions> optionalOptions = europeanCallOptionsRepository.findById(optionsId);
         return optionalOptions;
     }
 
     @Override
-    public EuropeanOptions updateOptions(EuropeanOptions europeanOptions) {
+    public EuropeanCallOptions updateOptions(EuropeanCallOptions europeanCallOptions) {
 
-        Optional<EuropeanOptions> optionalOptions = getOptionsById(europeanOptions.getTickerId());
+        Optional<EuropeanCallOptions> optionalOptions = getOptionsById(europeanCallOptions.getTickerId());
         // options existence validation
         if (optionalOptions.isEmpty()) {
             throw new IllegalStateException("Options is not found when updateOptions");
         }
 
         // stock existence validation
-        Optional<Stock> optionalStock = stockService.getStockById(europeanOptions.getStock().getTickerId());
+        Optional<Stock> optionalStock = stockService.getStockById(europeanCallOptions.getStock().getTickerId());
         if (optionalStock.isEmpty()) {
             throw new IllegalStateException("Stock is not found when updateOptions");
         }
 
-        EuropeanOptions options = optionalOptions.get();
-        return europeanCallOptionsRepository.save(options);
+        EuropeanCallOptions optionsEntity = optionalOptions.get();
+        return europeanCallOptionsRepository.save(optionsEntity);
     }
 
     @Override
     public void deleteOptionsById(@NotNull String optionsId) {
 
-        Optional<EuropeanOptions> optionalOptions = getOptionsById(optionsId);
+        Optional<EuropeanCallOptions> optionalOptions = getOptionsById(optionsId);
         if (optionalOptions.isEmpty()) {
             throw new IllegalStateException("Options is not found when deleteOptionsById");
         }

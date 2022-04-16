@@ -11,7 +11,7 @@ import java.util.*;
 
 @Component
 public class DbInit {
-    Logger logger = LoggerFactory.getLogger(DbInit.class);
+    private static  Logger logger = LoggerFactory.getLogger(DbInit.class);
     private final double RANGE_MIN = 0.5;
     private final double RANGE_MAX = 2.0;
     final Random R = new Random();

@@ -1,10 +1,9 @@
 package com.example.portfolio_system.entity;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -16,6 +15,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class Stock {
+
+    private static Logger logger = LoggerFactory.getLogger(Stock.class);
 
     @Id
     @Column(nullable = false)
@@ -33,16 +34,19 @@ public class Stock {
     @Column(updatable = false)
     private Double annualizedSD;
 
-    @OneToMany(mappedBy = "stock", orphanRemoval = true)
-    private Set<EuropeanOptions> europeanOptions = new LinkedHashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "stock", orphanRemoval = true)
+    private Set<EuropeanCallOptions> europeanCallOptionsSet = new LinkedHashSet<>();
 
-
-    @PostPersist
-    public void init() {
-    }
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "stock", orphanRemoval = true)
+    private Set<EuropeanPutOptions> europeanPuttOptionsSet = new LinkedHashSet<>();
 
     @PostUpdate
     public void update() {
-        System.out.println(this);
+        logger.info("update a stock: {}", this);
+    }
+
+    @PostPersist
+    public void postPersist() {
+        logger.info("Persisted a stock: {}", this);
     }
 }

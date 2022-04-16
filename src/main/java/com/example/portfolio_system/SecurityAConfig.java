@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 @EnableScheduling
 public class SecurityAConfig implements SchedulingConfigurer {
 
-    Logger logger = LoggerFactory.getLogger(SecurityAConfig.class);
+    private static  Logger logger = LoggerFactory.getLogger(SecurityAConfig.class);
 
     @Autowired
     private StockService stockService;
@@ -46,7 +46,7 @@ public class SecurityAConfig implements SchedulingConfigurer {
                     public void run() {
                         time = (int) ((RANGE_MIN + (RANGE_MAX - RANGE_MIN) * R.nextDouble()) * 1000);
                         double deltaT = (double) time / 1000;
-                        stockService.updateStock(deltaT);
+                        stockService.stockDataProvider(deltaT);
                     }
                 },
                 new Trigger() {

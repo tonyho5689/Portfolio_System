@@ -1,5 +1,7 @@
 package com.example.portfolio_system.formular;
 
+import org.springframework.stereotype.Component;
+
 import java.text.DecimalFormat;
 import java.util.Random;
 

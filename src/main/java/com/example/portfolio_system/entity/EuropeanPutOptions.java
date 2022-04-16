@@ -10,25 +10,30 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EuropeanOptions {
+public class EuropeanPutOptions {
     @Id
     @Column(nullable = false)
     @NotNull
     private String tickerId;
 
     //static(remain unchanged) fields
-    @Column(name = "strike_price", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private Double strikePrice;
 
-    @Column(name = "interest_rate", nullable = false, updatable = false)
-    private Integer interestRate = 2;
+    //    @Setter(AccessLevel.NONE)
+    @Column(nullable = false, updatable = false)
+    private Integer interestRate;
 
-    @Column(name = "maturity_year", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private Integer maturityYear;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "stock_ticker_id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Stock stock;
+
+    private Double theoreticalPrice;
 
 
 }

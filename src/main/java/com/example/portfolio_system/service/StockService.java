@@ -1,6 +1,5 @@
 package com.example.portfolio_system.service;
 
-import com.example.portfolio_system.entity.EuropeanOptions;
 import com.example.portfolio_system.entity.Stock;
 import com.sun.istack.NotNull;
 
@@ -13,8 +12,10 @@ public interface StockService {
 
     Optional<Stock> getStockById(@NotNull String tickerId);
 
-    List<Stock> updateStock(double deltaT);
+    Stock updateStock(Stock stock);
 
     void deleteStockById(@NotNull String tickerId);
+
+    List<Stock> stockDataProvider(double deltaT);
 
 }
