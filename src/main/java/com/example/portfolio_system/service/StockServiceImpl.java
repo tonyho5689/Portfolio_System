@@ -1,6 +1,6 @@
 package com.example.portfolio_system.service;
 
-import com.example.portfolio_system.entity.EuropeanCallOptions;
+import com.example.portfolio_system.entity.EuropeanOptions;
 import com.example.portfolio_system.entity.Stock;
 import com.example.portfolio_system.formular.BrownianMotion;
 import com.example.portfolio_system.repository.EuropeanCallOptionsRepository;
@@ -31,19 +31,9 @@ public class StockServiceImpl implements StockService {
 //                .securityId("Futu Sec")
 //                .build();
 
-        Stock tickerA = Stock.builder()
-                .tickerId("AAPL")
-                .price(100.0)
-                .mu(0.5)
-                .annualizedSD(0.3)
-                .build();
+        Stock tickerA = Stock.builder().tickerId("AAPL").price(100.0).mu(0.5).annualizedSD(0.3).build();
 
-        Stock tickerB = Stock.builder()
-                .tickerId("TSLA")
-                .price(700.0)
-                .mu(0.8)
-                .annualizedSD(0.9)
-                .build();
+        Stock tickerB = Stock.builder().tickerId("TSLA").price(700.0).mu(0.8).annualizedSD(0.9).build();
 
 
         List<Stock> tickerList = Arrays.asList(tickerA, tickerB);
@@ -56,52 +46,23 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public EuropeanCallOptions createSecurity(EuropeanCallOptions europeanCallOptions) {
-        Optional<EuropeanCallOptions> optional = getSecurityById(europeanCallOptions.getTickerId());
-
-        if (optional.isPresent()) {
-            throw new IllegalStateException("Duplicated security when creating security");
-        }
-
-        return europeanCallOptionsRepository.save(europeanCallOptions);
-    }
-
-    @Override
-    public EuropeanCallOptions updateSecurity(EuropeanCallOptions europeanCallOptions) {
-        Optional<EuropeanCallOptions> optional = getSecurityById(europeanCallOptions.getTickerId());
-        if (optional.isEmpty()) {
-            throw new IllegalStateException("Security is not found when updating security");
-        }
-
-        EuropeanCallOptions element = optional.get();
-        element.setStock(europeanCallOptions.getStock());
-        return europeanCallOptionsRepository.save(element);
-    }
-
-    @Override
-    public Optional<EuropeanCallOptions> getSecurityById(@NotNull String securityId) {
-        return europeanCallOptionsRepository.findById(securityId);
-    }
-
-    @Override
-    public void deleteSecurityById(@NotNull String securityId) {
-        Optional<EuropeanCallOptions> optional = getSecurityById(securityId);
-        if (optional.isEmpty()) {
-            throw new IllegalStateException("Security is not found when deleting security");
-        }
-
-        europeanCallOptionsRepository.delete(optional.get());
-    }
-
-    @Override
     public Stock createStock(Stock stock) {
-        Optional<Stock> optional = getStockById(stock.getTickerId());
 
-        if (optional.isPresent()) {
-            throw new IllegalStateException("Duplicated ticker id when creating stock");
+        Optional<Stock> optionalStock = getStockById(stock.getTickerId());
+
+        // duplicated options validation
+        if (optionalStock.isPresent()) {
+            throw new IllegalStateException("Duplicated stock when createStock");
         }
 
         return stockRepository.save(stock);
+    }
+
+    @Override
+    public Optional<Stock> getStockById(@NotNull String tickerId) {
+
+        Optional<Stock> optionalStock = stockRepository.findById(tickerId);
+        return optionalStock;
     }
 
     @Override
@@ -125,18 +86,13 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public Optional<Stock> getStockById(@NotNull String tickerId) {
-        return stockRepository.findById(tickerId);
-    }
-
-    @Override
     public void deleteStockById(@NotNull String tickerId) {
-        Optional<Stock> optional = getStockById(tickerId);
-        if (optional.isEmpty()) {
-            throw new IllegalStateException("Stock is not found when deleting stock");
-        }
 
-        stockRepository.delete(optional.get());
+        Optional<Stock> optionalStock = getStockById(tickerId);
+        if (optionalStock.isEmpty()) {
+            throw new IllegalStateException("Stock is not found when deleteStockById");
+        }
+        stockRepository.delete(optionalStock.get());
     }
 
 

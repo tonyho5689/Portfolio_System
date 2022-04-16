@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -32,8 +33,9 @@ public class Stock {
     @Column(updatable = false)
     private Double annualizedSD;
 
-    @OneToMany(mappedBy = "stock")
-    private Set<EuropeanCallOptions> europeanCallOptionsSet;
+    @OneToMany(mappedBy = "stock", orphanRemoval = true)
+    private Set<EuropeanOptions> europeanOptions = new LinkedHashSet<>();
+
 
     @PostPersist
     public void init() {
