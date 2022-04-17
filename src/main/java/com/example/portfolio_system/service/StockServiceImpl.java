@@ -48,7 +48,6 @@ public class StockServiceImpl implements StockService {
         EuropeanOptions optionsA1 = EuropeanOptions.builder()
                 .tickerId("TSLA123")
                 .strikePrice(750.0)
-                .interestRate(2)
                 .maturityYear(2)
                 .stock(tickerA)
                 .numberOfShare(2)
@@ -61,7 +60,6 @@ public class StockServiceImpl implements StockService {
                 .maturityYear(2)
                 .stock(tickerA)
                 .numberOfShare(3)
-                .interestRate(2)
                 .optionsType(OptionsType.PUT)
                 .build();
 
@@ -70,7 +68,6 @@ public class StockServiceImpl implements StockService {
                 .strikePrice(200.0)
                 .maturityYear(2)
                 .stock(tickerB)
-                .interestRate(2)
                 .numberOfShare(4)
                 .optionsType(OptionsType.PUT)
                 .build();
@@ -160,11 +157,9 @@ public class StockServiceImpl implements StockService {
                     double marketValue = held * options.getTheoreticalPrice();
                     options.setMarketValue(marketValue);
                 }
-
                 europeanOptionsService.updateOptions(options);
             });
         });
-
     }
 
 }

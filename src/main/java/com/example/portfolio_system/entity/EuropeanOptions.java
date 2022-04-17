@@ -21,10 +21,10 @@ public class EuropeanOptions {
     @Column(nullable = false, updatable = false)
     private Double strikePrice;
 
-    //TODO change to static field
-    //    @Setter(AccessLevel.NONE)
+    //static(remain unchanged) fields
+    @Setter(AccessLevel.NONE)
     @Column(nullable = false, updatable = false)
-    private Integer interestRate;
+    private Integer interestRate = 2;
 
     @Column(nullable = false, updatable = false)
     private Integer maturityYear;
@@ -37,15 +37,17 @@ public class EuropeanOptions {
 
     private Double theoreticalPrice;
 
-    //TODO set default = 0
     private Integer numberOfShare;
 
     private Double marketValue;
 
-    //TODO enum type
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OptionsType optionsType;
 
 
+    @PrePersist
+    public void prePersist() {
+        this.interestRate = 2;
+    }
 }
