@@ -1,6 +1,7 @@
 package com.example.portfolio_system;
 
 import com.example.portfolio_system.controller.PortfolioController;
+import com.example.portfolio_system.type.ListenMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -24,20 +25,26 @@ public class PortfolioSystemApplication implements CommandLineRunner {
 //        EuropeanOptionPrice price = new EuropeanOptionPrice();
 //        price.test();
         Scanner scanner = new Scanner(System.in);
-        System.out.println(
-                "=========== Please select the function =============" +
-                        "\n" +
-                        "| (1) Keep printing portfolio                      |" +
-                        "\n" +
-                        "| (2) Print portfolio on demand                    |");
-        String input = scanner.nextLine();
-        switch (input) {
-            case "1":
-                SecuritiesMockDataFeed securitiesMockDataFeed = new SecuritiesMockDataFeed();
-                break;
-            default:
-                break;
+        while (true) {
+            System.out.println("============= Please select the function ===========" + "\n" + "| (1) Keep printing portfolio                      |" + "\n" + "| (2) Print portfolio on demand                    |" + "\n" + "====================================================");
+            System.out.println("Your Input:");
+            String input = scanner.nextLine();
+            switch (input) {
+                case "1":
+                    portfolioController.setListenMode(ListenMode.ON_CHANGE);
+                    break;
+                case "2":
+                    portfolioController.printOnChange();
+                    break;
+                default:
+                    System.out.println("Please retry");
+                    break;
+            }
+            if (input.equals("1")) break;
         }
+
+//
+
 
 //        portfolioController.printOnDemand();
 

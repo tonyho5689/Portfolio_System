@@ -1,6 +1,8 @@
 package com.example.portfolio_system;
 
+import com.example.portfolio_system.controller.PortfolioController;
 import com.example.portfolio_system.service.StockService;
+import com.example.portfolio_system.type.ListenMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class SecuritiesMockDataFeed implements SchedulingConfigurer {
     @Autowired
     private StockService stockService;
 
+    @Autowired
+    private PortfolioController portfolioController;
+
     final static double RANGE_MIN = 0.5;
     final static double RANGE_MAX = 2.0;
     final static Random R = new Random();
@@ -47,6 +52,9 @@ public class SecuritiesMockDataFeed implements SchedulingConfigurer {
                         time = (int) ((RANGE_MIN + (RANGE_MAX - RANGE_MIN) * R.nextDouble()) * 1000);
                         double deltaT = (double) time / 1000;
                         stockService.publishStockPrice(deltaT);
+                        if (portfolioController.getListenMode().equals(ListenMode.ON_CHANGE))
+                            //TODO print service in stock
+                            portfolioController.printOnChange();
                     }
                 },
                 new Trigger() {

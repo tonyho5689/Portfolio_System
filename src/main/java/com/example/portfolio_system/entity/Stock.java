@@ -1,5 +1,6 @@
 package com.example.portfolio_system.entity;
 
+import com.example.portfolio_system.type.PositionType;
 import com.sun.istack.NotNull;
 import lombok.*;
 import org.slf4j.Logger;
@@ -22,11 +23,11 @@ public class Stock {
     @Column(nullable = false)
     @NotNull
     private String tickerId;
-    private Double price;
 
-    //random field
-    private Double deltaT;
-    private Double epsilon;
+    @Column(columnDefinition = "Decimal(10,2)")
+    private Double price;
+    @Column(columnDefinition = "Decimal(10,2)")
+    private Double marketValue;
 
     //static(remain unchanged) fields
     @Column(updatable = false)
@@ -34,22 +35,24 @@ public class Stock {
     @Column(updatable = false)
     private Double annualizedSD;
 
+    //random field
+    private Double deltaT;
+    private Double epsilon;
+
     //Common stocks that held (by default 0 if not holding)
     private int numberOfShare;
 
-    @Setter(AccessLevel.NONE)
-    private Double marketValue;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PositionType positionType;
 
     //One stock can have many options(call/put)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "stock", orphanRemoval = true)
     private Set<EuropeanOptions> europeanOptionsSet = new LinkedHashSet<>();
 
-    @PostUpdate
-    public void update() {
-        this.marketValue = numberOfShare * price;
-        logger.info("update a stock: {}", this);
-    }
 
+    //lifecycle callback
     @PostPersist
     public void postPersist() {
         logger.info("Persisted a stock: {}", this);

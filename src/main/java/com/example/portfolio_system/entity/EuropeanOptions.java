@@ -1,6 +1,7 @@
 package com.example.portfolio_system.entity;
 
 import com.example.portfolio_system.type.OptionsType;
+import com.example.portfolio_system.type.PositionType;
 import com.sun.istack.NotNull;
 import lombok.*;
 
@@ -17,17 +18,29 @@ public class EuropeanOptions {
     @NotNull
     private String tickerId;
 
+    @Column(columnDefinition = "Decimal(10,2)")
+    private Double theoreticalPrice;
+    @Column(columnDefinition = "Decimal(10,2)")
+    private Double marketValue;
+
     //static(remain unchanged) fields
     @Column(nullable = false, updatable = false)
     private Double strikePrice;
-
-    //static(remain unchanged) fields
     @Setter(AccessLevel.NONE)
     @Column(nullable = false, updatable = false)
-    private Integer interestRate = 2;
+    private Integer interestRate;
 
     @Column(nullable = false, updatable = false)
     private Integer maturityYear;
+    private int numberOfContracts;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OptionsType optionsType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PositionType positionType;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "stock_ticker_id", nullable = false)
@@ -35,17 +48,7 @@ public class EuropeanOptions {
     @ToString.Exclude
     private Stock stock;
 
-    private Double theoreticalPrice;
-
-    private Integer numberOfContracts;
-
-    private Double marketValue;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private OptionsType optionsType;
-
-
+    //lifecycle callback
     @PrePersist
     public void prePersist() {
         this.interestRate = 2;

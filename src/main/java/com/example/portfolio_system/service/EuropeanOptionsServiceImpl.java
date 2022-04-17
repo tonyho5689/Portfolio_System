@@ -6,12 +6,15 @@ import com.example.portfolio_system.formular.EuropeanOptionPrice;
 import com.example.portfolio_system.repository.EuropeanOptionsRepository;
 import com.example.portfolio_system.repository.StockRepository;
 import com.example.portfolio_system.type.OptionsType;
+import com.example.portfolio_system.type.PositionType;
 import com.sun.istack.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,6 +54,11 @@ public class EuropeanOptionsServiceImpl implements EuropeanOptionsService {
 
         Optional<EuropeanOptions> optionalOptions = europeanOptionsRepository.findById(optionsId);
         return optionalOptions;
+    }
+
+    @Override
+    public List<EuropeanOptions> getAllOptions() {
+        return europeanOptionsRepository.findAll();
     }
 
     @Override
@@ -97,12 +105,38 @@ public class EuropeanOptionsServiceImpl implements EuropeanOptionsService {
         double theoreticalPrice = options.getOptionsType().equals(OptionsType.CALL) ? europeanOptionPrice.callOptions() : europeanOptionPrice.putOptions();
         options.setTheoreticalPrice(theoreticalPrice);
         //calculate market value
-        if (options.getNumberOfContracts() != null) {
-            int held = options.getOptionsType().equals(OptionsType.CALL) ? options.getNumberOfContracts() : (-1 * options.getNumberOfContracts());
-            double marketValue = held * options.getTheoreticalPrice();
+        if (options.getNumberOfContracts() > 0) {
+            int position = options.getPositionType().equals(PositionType.LONG) ? options.getNumberOfContracts() : (-1 * options.getNumberOfContracts());
+            double marketValue = position * options.getTheoreticalPrice();
             options.setMarketValue(marketValue);
         }
         updateOptions(options);
     }
 
+    @Override
+    public Double getAllOptionsNAV() {
+        List<EuropeanOptions> optionsList = getAllOptions();
+        double nav = 0;
+        for (EuropeanOptions options : optionsList) {
+            if (options.getNumberOfContracts() != 0) {
+                nav += options.getMarketValue();
+            }
+        }
+        return nav;
+    }
+
+    @Override
+    public List<EuropeanOptions> getHeldOptions() {
+        List<EuropeanOptions> optionsList = getAllOptions();
+        List<EuropeanOptions> heldList = new ArrayList<>();
+        optionsList.forEach(options -> {
+            if (options.getNumberOfContracts() > 0) {
+                heldList.add(options);
+            }
+        });
+        return heldList;
+    }
 }
+
+
+

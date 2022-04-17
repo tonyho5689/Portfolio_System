@@ -4,7 +4,5 @@ import com.example.portfolio_system.entity.Portfolio;
 
 public interface PortfolioService {
 
-    //test
-    Portfolio createInstant(Portfolio portfolio);
-
+    
 }

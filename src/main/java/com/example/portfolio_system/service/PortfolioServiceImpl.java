@@ -11,10 +11,4 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Autowired
     private PortfolioRepository portfolioRepository;
 
-    @Override
-    public Portfolio createInstant(Portfolio instant) {
-//        Portfolio portfolio = new Portfolio();
-//        portfolioRepository
-        return null;
-    }
 }
