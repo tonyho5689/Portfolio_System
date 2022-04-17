@@ -16,6 +16,6 @@ public interface StockService {
 
     void deleteStockById(@NotNull String tickerId);
 
-    List<Stock> stockDataProvider(double deltaT);
+    void stockDataProvider(double deltaT);
 
 }

@@ -27,7 +27,7 @@ public class EuropeanOptionPrice {
     public Double findD1() {
         //d1
         double d1FirstPart = FastMath.log(currPrice / strikePrice);
-        double d1SecondPart = (interestRate + (FastMath.pow(annualizedSD, 2) / 2)) * maturityYear;
+        double d1SecondPart = ((interestRate/100) + (FastMath.pow(annualizedSD, 2) / 2)) * maturityYear;
         double d1ThirdPart = annualizedSD * FastMath.sqrt(maturityYear);
         double d1 = (d1FirstPart + d1SecondPart) / d1ThirdPart;
         return d1;
@@ -46,8 +46,10 @@ public class EuropeanOptionPrice {
         // c price
         NormalDistribution normalDistribution = new NormalDistribution();
         double cPart1 = currPrice * (normalDistribution.cumulativeProbability(d1));
-        double cPart2 = (strikePrice) * (FastMath.exp(-1 * interestRate * maturityYear)) * (normalDistribution.cumulativeProbability(d2));
+        double cPart2 = (strikePrice) * (FastMath.exp(-1 * (interestRate/100) * maturityYear)) * (normalDistribution.cumulativeProbability(d2));
         Double cPrice = cPart1 - cPart2;
+
+//        logger.info("====validate call options Price: {}, D1: {}, D2: {}, K: {}, exp part: {}, S: {}, volatility:{} ", cPrice, d1, d2, strikePrice, FastMath.exp(-1 * interestRate * maturityYear), currPrice, annualizedSD);
         return cPrice;
     }
 
@@ -56,9 +58,11 @@ public class EuropeanOptionPrice {
         double d2 = findD2();
         //p price
         NormalDistribution normalDistribution = new NormalDistribution();
-        double pPart1 = (strikePrice) * (FastMath.exp(-1 * interestRate * maturityYear)) * (normalDistribution.cumulativeProbability(-1 * d2));
-        double pPart2 = currPrice * (normalDistribution.cumulativeProbability(-1 * d1));
+        double pPart1 = (strikePrice) * (FastMath.exp(-1 * (interestRate/100) * maturityYear)) * (normalDistribution.cumulativeProbability(1 - d2));
+        double pPart2 = currPrice * (normalDistribution.cumulativeProbability(1 - d1));
         Double pPrice = pPart1 - pPart2;
+
+//        logger.info("====validate put options Price: {}, D1: {}, D2: {}, K: {}, exp part: {}, S: {}, volatility:{} ", pPrice, d1, d2, strikePrice, FastMath.exp(-1 * interestRate * maturityYear), currPrice, annualizedSD);
         return pPrice;
     }
 

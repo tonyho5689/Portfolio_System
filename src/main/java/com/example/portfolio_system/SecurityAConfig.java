@@ -1,6 +1,7 @@
 package com.example.portfolio_system;
 
 import com.example.portfolio_system.service.StockService;
+import org.apache.commons.math3.random.RandomGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,14 @@ import java.util.concurrent.Executors;
 @EnableScheduling
 public class SecurityAConfig implements SchedulingConfigurer {
 
-    private static  Logger logger = LoggerFactory.getLogger(SecurityAConfig.class);
+    private static Logger logger = LoggerFactory.getLogger(SecurityAConfig.class);
 
     @Autowired
     private StockService stockService;
 
     final static double RANGE_MIN = 0.5;
     final static double RANGE_MAX = 2.0;
-    final Random R = new Random();
+    final static Random R = new Random();
     public static int time;
 
 

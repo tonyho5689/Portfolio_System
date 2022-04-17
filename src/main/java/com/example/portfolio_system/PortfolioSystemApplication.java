@@ -8,8 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PortfolioSystemApplication implements CommandLineRunner {
 
-    @Autowired
-    CartService cartService;
 
     public static void main(String[] args) {
         SpringApplication.run(PortfolioSystemApplication.class, args);

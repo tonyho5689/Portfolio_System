@@ -34,11 +34,12 @@ public class Stock {
     @Column(updatable = false)
     private Double annualizedSD;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "stock", orphanRemoval = true)
-    private Set<EuropeanCallOptions> europeanCallOptionsSet = new LinkedHashSet<>();
+
+    //TODO set default = 0
+    private Integer numberOfShare;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "stock", orphanRemoval = true)
-    private Set<EuropeanPutOptions> europeanPuttOptionsSet = new LinkedHashSet<>();
+    private Set<EuropeanOptions> europeanOptionsSet = new LinkedHashSet<>();
 
     @PostUpdate
     public void update() {

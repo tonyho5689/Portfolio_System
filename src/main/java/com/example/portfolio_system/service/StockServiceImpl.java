@@ -1,14 +1,15 @@
 package com.example.portfolio_system.service;
 
-import com.example.portfolio_system.entity.EuropeanCallOptions;
-import com.example.portfolio_system.entity.EuropeanPutOptions;
+import com.example.portfolio_system.entity.EuropeanOptions;
 import com.example.portfolio_system.entity.Stock;
 import com.example.portfolio_system.formular.BrownianMotion;
 import com.example.portfolio_system.formular.EuropeanOptionPrice;
-import com.example.portfolio_system.repository.EuropeanCallOptionsRepository;
-import com.example.portfolio_system.repository.EuropeanPutOptionsRepository;
+import com.example.portfolio_system.repository.EuropeanOptionsRepository;
 import com.example.portfolio_system.repository.StockRepository;
+import com.example.portfolio_system.type.OptionsType;
 import com.sun.istack.NotNull;
+import org.apache.commons.math3.random.AbstractRandomGenerator;
+import org.apache.commons.math3.random.RandomGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +24,19 @@ public class StockServiceImpl implements StockService {
     private static Logger logger = LoggerFactory.getLogger(StockServiceImpl.class);
 
     @Autowired
-    private EuropeanCallOptionsRepository europeanCallOptionsRepository;
-    @Autowired
-    private EuropeanPutOptionsRepository europeanPutOptionsRepository;
+    private EuropeanOptionsRepository europeanOptionsRepository;
+
     @Autowired
     private StockRepository stockRepository;
 
     @Autowired
-    private CallOptionsService callOptionsService;
-
-    @Autowired
-    private PutOptionsService putOptionsService;
+    private EuropeanOptionsService europeanOptionsService;
 
     //Init ticker for securities
     @PostConstruct
     private void postConstruct() {
+
+        //Portfolio init
 
         //Stock init
         Stock tickerA = Stock.builder().tickerId("TSLA").price(700.0).mu(0.5).annualizedSD(0.3).build();
@@ -46,33 +45,38 @@ public class StockServiceImpl implements StockService {
         tickerList.forEach(this::createStock);
 
         //Call Option init
-        EuropeanCallOptions optionsA1 = EuropeanCallOptions.builder()
+        EuropeanOptions optionsA1 = EuropeanOptions.builder()
                 .tickerId("TSLA123")
                 .strikePrice(750.0)
+                .interestRate(2)
                 .maturityYear(2)
                 .stock(tickerA)
-                .interestRate(2)
+                .numberOfShare(2)
+                .optionsType(OptionsType.CALL)
                 .build();
 
-        EuropeanCallOptions optionsA2 = EuropeanCallOptions.builder()
+        EuropeanOptions optionsA2 = EuropeanOptions.builder()
                 .tickerId("TSLA456")
                 .strikePrice(800.0)
                 .maturityYear(2)
                 .stock(tickerA)
+                .numberOfShare(3)
                 .interestRate(2)
+                .optionsType(OptionsType.PUT)
                 .build();
-        List<EuropeanCallOptions> optionsAList = Arrays.asList(optionsA1, optionsA2);
-        optionsAList.forEach(options -> callOptionsService.createOptions(options));
 
-        EuropeanCallOptions optionsB = EuropeanCallOptions.builder()
+        EuropeanOptions optionsB = EuropeanOptions.builder()
                 .tickerId("AAPL123")
                 .strikePrice(200.0)
                 .maturityYear(2)
                 .stock(tickerB)
                 .interestRate(2)
+                .numberOfShare(4)
+                .optionsType(OptionsType.PUT)
                 .build();
-        List<EuropeanCallOptions> optionsBList = Arrays.asList(optionsB);
-        optionsBList.forEach(options -> callOptionsService.createOptions(options));
+        List<EuropeanOptions> optionsList = Arrays.asList(optionsA1, optionsA2, optionsB);
+        optionsList.forEach(options -> europeanOptionsService.createOptions(options));
+
     }
 
     @Override
@@ -104,8 +108,7 @@ public class StockServiceImpl implements StockService {
             throw new IllegalStateException("Stock is not found when updateOptions");
         }
 
-        Stock stockEntity = optionalStock.get();
-        return stockRepository.save(stockEntity);
+        return stockRepository.save(stock);
     }
 
     @Override
@@ -119,61 +122,48 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<Stock> stockDataProvider(double deltaT) {
+    public void stockDataProvider(double deltaT) {
 
         Random r = new Random();
 
         //update all stock
         List<Stock> stockList = stockRepository.findAll();
         stockList.forEach(ticker -> {
+            //update stock
             //random variable(epsilon) that is drawn from a standardized normal distribution
             double epsilon = r.nextGaussian();
             BrownianMotion brownianMotion = new BrownianMotion(ticker.getPrice(), deltaT, epsilon, ticker.getMu(), ticker.getAnnualizedSD());
             ticker.setPrice(brownianMotion.getUpdatedPrice());
             ticker.setDeltaT(deltaT);
             ticker.setEpsilon(epsilon);
+            updateStock(ticker);
+
+
+            //update call & put options according a stock
+            Set<EuropeanOptions> optionsSet = ticker.getEuropeanOptionsSet();
+            optionsSet.forEach(options -> {
+                //retrieve call options parameters
+                double currPrice = options.getStock().getPrice();
+                double strikePrice = options.getStrikePrice();
+                int interestRate = options.getInterestRate();
+                double annualizedSD = options.getStock().getAnnualizedSD();
+                int maturityYear = options.getMaturityYear();
+
+                EuropeanOptionPrice europeanOptionPrice = new EuropeanOptionPrice(currPrice, strikePrice, interestRate, annualizedSD, maturityYear);
+
+                //calculate call options price
+                double theoreticalPrice = options.getOptionsType().equals(OptionsType.CALL) ? europeanOptionPrice.callOptions() : europeanOptionPrice.putOptions();
+                options.setTheoreticalPrice(theoreticalPrice);
+                //calculate market value
+                if (options.getNumberOfShare() != null) {
+                    int held = options.getOptionsType().equals(OptionsType.CALL) ? options.getNumberOfShare() : (-1 * options.getNumberOfShare());
+                    double marketValue = held * options.getTheoreticalPrice();
+                    options.setMarketValue(marketValue);
+                }
+
+                europeanOptionsService.updateOptions(options);
+            });
         });
-
-        //TODO simplify two types of options into single iterator
-        //update all call options
-        List<EuropeanCallOptions> callOptionsList = europeanCallOptionsRepository.findAll();
-        callOptionsList.forEach(options -> {
-            //retrieve call options parameters
-            double currPrice = options.getStock().getPrice();
-            double strikePrice = options.getStrikePrice();
-            int interestRate = options.getInterestRate();
-            double annualizedSD = options.getStock().getAnnualizedSD();
-            int maturityYear = options.getMaturityYear();
-
-            //do math for call option's price
-            EuropeanOptionPrice europeanOptionPrice = new EuropeanOptionPrice(currPrice, strikePrice, interestRate, annualizedSD, maturityYear);
-            options.setTheoreticalPrice(europeanOptionPrice.callOptions());
-
-            callOptionsService.updateOptions(options);
-        });
-
-        //update all put options
-        List<EuropeanPutOptions> putOptionsList = europeanPutOptionsRepository.findAll();
-        putOptionsList.forEach(options -> {
-            //retrieve call options parameters
-            double currPrice = options.getStock().getPrice();
-            double strikePrice = options.getStrikePrice();
-            int interestRate = options.getInterestRate();
-            double annualizedSD = options.getStock().getAnnualizedSD();
-            int maturityYear = options.getMaturityYear();
-
-            //do math for call option's price
-            EuropeanOptionPrice europeanOptionPrice = new EuropeanOptionPrice(currPrice, strikePrice, interestRate, annualizedSD, maturityYear);
-            options.setTheoreticalPrice(europeanOptionPrice.putOptions());
-
-            putOptionsService.updateOptions(options);
-        });
-
-        //TODO Calculate market value
-
-
-        return stockRepository.saveAll(stockList);
-
 
     }
 
