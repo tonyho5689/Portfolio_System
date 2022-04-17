@@ -34,8 +34,6 @@ public class Stock {
     @Column(updatable = false)
     private Double annualizedSD;
 
-
-    //TODO set default = 0
     private Integer numberOfShare;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "stock", orphanRemoval = true)
