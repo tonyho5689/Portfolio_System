@@ -53,7 +53,6 @@ public class SecuritiesMockDataFeed implements SchedulingConfigurer {
                         double deltaT = (double) time / 1000;
                         stockService.publishStockPrice(deltaT);
                         if (portfolioController.getListenMode().equals(ListenMode.ON_CHANGE))
-                            //TODO print service in stock
                             portfolioController.printOnChange();
                     }
                 },
