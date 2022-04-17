@@ -2,8 +2,10 @@ package com.example.portfolio_system.service;
 
 import com.example.portfolio_system.entity.EuropeanOptions;
 import com.example.portfolio_system.entity.Stock;
+import com.example.portfolio_system.formular.EuropeanOptionPrice;
 import com.example.portfolio_system.repository.EuropeanOptionsRepository;
 import com.example.portfolio_system.repository.StockRepository;
+import com.example.portfolio_system.type.OptionsType;
 import com.sun.istack.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +79,30 @@ public class EuropeanOptionsServiceImpl implements EuropeanOptionsService {
             throw new IllegalStateException("Options is not found when deleteOptionsById");
         }
         europeanOptionsRepository.delete(optionalOptions.get());
+    }
+
+    @Override
+    public void publishOptionsData(EuropeanOptions options) {
+
+        //retrieve call options parameters
+        double currPrice = options.getStock().getPrice();
+        double strikePrice = options.getStrikePrice();
+        int interestRate = options.getInterestRate();
+        double annualizedSD = options.getStock().getAnnualizedSD();
+        int maturityYear = options.getMaturityYear();
+
+        EuropeanOptionPrice europeanOptionPrice = new EuropeanOptionPrice(currPrice, strikePrice, interestRate, annualizedSD, maturityYear);
+
+        //calculate call options price
+        double theoreticalPrice = options.getOptionsType().equals(OptionsType.CALL) ? europeanOptionPrice.callOptions() : europeanOptionPrice.putOptions();
+        options.setTheoreticalPrice(theoreticalPrice);
+        //calculate market value
+        if (options.getNumberOfContracts() != null) {
+            int held = options.getOptionsType().equals(OptionsType.CALL) ? options.getNumberOfContracts() : (-1 * options.getNumberOfContracts());
+            double marketValue = held * options.getTheoreticalPrice();
+            options.setMarketValue(marketValue);
+        }
+        updateOptions(options);
     }
 
 }

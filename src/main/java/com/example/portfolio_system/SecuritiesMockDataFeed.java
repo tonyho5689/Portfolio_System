@@ -1,7 +1,6 @@
 package com.example.portfolio_system;
 
 import com.example.portfolio_system.service.StockService;
-import org.apache.commons.math3.random.RandomGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,9 @@ import java.util.concurrent.Executors;
 
 @Configuration
 @EnableScheduling
-public class SecurityAConfig implements SchedulingConfigurer {
+public class SecuritiesMockDataFeed implements SchedulingConfigurer {
 
-    private static Logger logger = LoggerFactory.getLogger(SecurityAConfig.class);
+    private static Logger logger = LoggerFactory.getLogger(SecuritiesMockDataFeed.class);
 
     @Autowired
     private StockService stockService;
@@ -47,7 +46,7 @@ public class SecurityAConfig implements SchedulingConfigurer {
                     public void run() {
                         time = (int) ((RANGE_MIN + (RANGE_MAX - RANGE_MIN) * R.nextDouble()) * 1000);
                         double deltaT = (double) time / 1000;
-                        stockService.stockDataProvider(deltaT);
+                        stockService.publishStockPrice(deltaT);
                     }
                 },
                 new Trigger() {

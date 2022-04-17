@@ -3,7 +3,6 @@ package com.example.portfolio_system.service;
 import com.example.portfolio_system.entity.Stock;
 import com.sun.istack.NotNull;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface StockService {
@@ -16,6 +15,6 @@ public interface StockService {
 
     void deleteStockById(@NotNull String tickerId);
 
-    void stockDataProvider(double deltaT);
+    void publishStockPrice(double deltaT);
 
 }

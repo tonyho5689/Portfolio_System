@@ -37,7 +37,7 @@ public class EuropeanOptions {
 
     private Double theoreticalPrice;
 
-    private Integer numberOfShare;
+    private Integer numberOfContracts;
 
     private Double marketValue;
 

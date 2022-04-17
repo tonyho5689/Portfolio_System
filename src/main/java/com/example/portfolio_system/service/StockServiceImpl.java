@@ -39,8 +39,21 @@ public class StockServiceImpl implements StockService {
         //Portfolio init
 
         //Stock init
-        Stock tickerA = Stock.builder().tickerId("TSLA").price(700.0).mu(0.5).annualizedSD(0.3).build();
-        Stock tickerB = Stock.builder().tickerId("AAPL").price(100.0).mu(0.8).annualizedSD(0.9).build();
+        Stock tickerA = Stock.builder()
+                .tickerId("TSLA")
+                .price(700.0)
+                .mu(0.5)
+                .numberOfShare(2)
+                .annualizedSD(0.3)
+                .build();
+
+        Stock tickerB = Stock.builder()
+                .tickerId("AAPL")
+                .price(100.0)
+                .mu(0.8)
+                .numberOfShare(10)
+                .annualizedSD(0.9)
+                .build();
         List<Stock> tickerList = Arrays.asList(tickerA, tickerB);
         tickerList.forEach(this::createStock);
 
@@ -50,7 +63,7 @@ public class StockServiceImpl implements StockService {
                 .strikePrice(750.0)
                 .maturityYear(2)
                 .stock(tickerA)
-                .numberOfShare(2)
+                .numberOfContracts(2)
                 .optionsType(OptionsType.CALL)
                 .build();
 
@@ -59,7 +72,7 @@ public class StockServiceImpl implements StockService {
                 .strikePrice(800.0)
                 .maturityYear(2)
                 .stock(tickerA)
-                .numberOfShare(3)
+                .numberOfContracts(3)
                 .optionsType(OptionsType.PUT)
                 .build();
 
@@ -68,7 +81,7 @@ public class StockServiceImpl implements StockService {
                 .strikePrice(200.0)
                 .maturityYear(2)
                 .stock(tickerB)
-                .numberOfShare(4)
+                .numberOfContracts(4)
                 .optionsType(OptionsType.PUT)
                 .build();
         List<EuropeanOptions> optionsList = Arrays.asList(optionsA1, optionsA2, optionsB);
@@ -119,7 +132,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public void stockDataProvider(double deltaT) {
+    public void publishStockPrice(double deltaT) {
 
         Random r = new Random();
 
@@ -135,29 +148,10 @@ public class StockServiceImpl implements StockService {
             ticker.setEpsilon(epsilon);
             updateStock(ticker);
 
-
             //update call & put options according a stock
             Set<EuropeanOptions> optionsSet = ticker.getEuropeanOptionsSet();
             optionsSet.forEach(options -> {
-                //retrieve call options parameters
-                double currPrice = options.getStock().getPrice();
-                double strikePrice = options.getStrikePrice();
-                int interestRate = options.getInterestRate();
-                double annualizedSD = options.getStock().getAnnualizedSD();
-                int maturityYear = options.getMaturityYear();
-
-                EuropeanOptionPrice europeanOptionPrice = new EuropeanOptionPrice(currPrice, strikePrice, interestRate, annualizedSD, maturityYear);
-
-                //calculate call options price
-                double theoreticalPrice = options.getOptionsType().equals(OptionsType.CALL) ? europeanOptionPrice.callOptions() : europeanOptionPrice.putOptions();
-                options.setTheoreticalPrice(theoreticalPrice);
-                //calculate market value
-                if (options.getNumberOfShare() != null) {
-                    int held = options.getOptionsType().equals(OptionsType.CALL) ? options.getNumberOfShare() : (-1 * options.getNumberOfShare());
-                    double marketValue = held * options.getTheoreticalPrice();
-                    options.setMarketValue(marketValue);
-                }
-                europeanOptionsService.updateOptions(options);
+                europeanOptionsService.publishOptionsData(options);
             });
         });
     }

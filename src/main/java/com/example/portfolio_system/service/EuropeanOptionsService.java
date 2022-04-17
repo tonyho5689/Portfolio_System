@@ -15,4 +15,6 @@ public interface EuropeanOptionsService {
 
     void deleteOptionsById(@NotNull String securityId);
 
+    void publishOptionsData(EuropeanOptions europeanOptions);
+
 }

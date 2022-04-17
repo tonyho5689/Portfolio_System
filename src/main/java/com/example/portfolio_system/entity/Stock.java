@@ -34,13 +34,19 @@ public class Stock {
     @Column(updatable = false)
     private Double annualizedSD;
 
-    private Integer numberOfShare;
+    //Common stocks that held (by default 0 if not holding)
+    private int numberOfShare;
 
+    @Setter(AccessLevel.NONE)
+    private Double marketValue;
+
+    //One stock can have many options(call/put)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "stock", orphanRemoval = true)
     private Set<EuropeanOptions> europeanOptionsSet = new LinkedHashSet<>();
 
     @PostUpdate
     public void update() {
+        this.marketValue = numberOfShare * price;
         logger.info("update a stock: {}", this);
     }
 
