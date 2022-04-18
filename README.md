@@ -1,27 +1,15 @@
 
 <!-- TABLE OF CONTENTS -->
+<!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#About The Project">About The Project</a></li>
-    <li><a href="#Database design">Database design</a></li>
-    <li><a href="#Built With">Built With</a></li>
-    <li><a href="#Getting Started">Getting Started</a></li>
-    <li><a href="#Installation">Installation</a></li>
-    <li><a href="#Demo">Demo</a></li>
+    <li><a href="#about-the-project">About The Project</a></li>
+    <li><a href="#database-design">Database design</a></li>
+    <li><a href="#built-with">Built With</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#demo">Demo</a></li>
   </ol>
 </details>
 
