@@ -128,6 +128,7 @@ The generated report consists of Each position’s market value and Total portfo
 The system provides three ways to generate portfolio report.
 
 •Select Printing Portfolio on change. 
+   
    By Selecting "Printing Portfolio on change", user can keep monitoring the portfolio whenever there is a change in the market value for any position in the portfolio.
 
 •Select Printing portfolio on demand.
