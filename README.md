@@ -124,7 +124,7 @@ Those three functions will show each position’s market value & total portfolio
 
 ![Screenshot 2022-04-18 at 9 56 19 AM](https://user-images.githubusercontent.com/13139667/163742602-9506c3fa-6b88-4720-90c6-edb7fc6e6940.png)
 
-5.Select Printing portfolio on demand(as text file). It will generate a report for latest market value for all positions and the NAV of the whole portfolio as text file.
+5.Select Printing portfolio on demand(as text file). It will generate a report for latest market value for all positions and the NAV of the whole portfolio as text file. And the report will be named as portfolio_report(located in same directory as jar file)
 
 ![Screenshot 2022-04-18 at 9 58 09 AM](https://user-images.githubusercontent.com/13139667/163742735-73ee55e6-fe90-4125-ac78-75a23605b350.png)
 
