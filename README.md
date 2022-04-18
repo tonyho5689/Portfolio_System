@@ -107,24 +107,31 @@ Download: https://drive.google.com/file/d/1SLB-JiL2yikB6Cl_HYj0PUgWSfmp3FnP/view
                 .build();
             europeanOptionsService.createOptions(optionsA2)
    ```
-   
+    
 
+2.The structure of Portfolio report
 
-2.Start Service
+The generated report consists of Each position’s market value and Total portfolio’s NAV.
+•Each position’s market value
+  The system will print out Sysbol, Prices, Position, Number of held and Market value for each securites under three types of asset.
+•Total portfolio’s NAV
+  The system will print out 
+
+3.Start Service
 
 ![Screenshot 2022-04-18 at 9 48 55 AM](https://user-images.githubusercontent.com/13139667/163742014-a598acd4-2ac8-4a9f-a502-dd564d1192cd.png)
 
 Those three functions will show each position’s market value & total portfolio’s NAV.
 
-3.Select Printing Portfolio on change. By Selecting "Printing Portfolio on change", user can keep monitoring the portfolio whenever there is a change in the market value for any position in the portfolio.
+4.Select Printing Portfolio on change. By Selecting "Printing Portfolio on change", user can keep monitoring the portfolio whenever there is a change in the market value for any position in the portfolio.
 
 ![Screenshot 2022-04-18 at 9 54 16 AM](https://user-images.githubusercontent.com/13139667/163742442-dc1381da-1a20-4343-945f-e354baa5a387.png)
 
-4.Select Printing portfolio on demand. The latest market value for all positions and the NAV of the whole portfolio will be shown in console.
+5.Select Printing portfolio on demand. The latest market value for all positions and the NAV of the whole portfolio will be shown in console.
 
 ![Screenshot 2022-04-18 at 9 56 19 AM](https://user-images.githubusercontent.com/13139667/163742602-9506c3fa-6b88-4720-90c6-edb7fc6e6940.png)
 
-5.Select Printing portfolio on demand(as text file). It will generate a report for latest market value for all positions and the NAV of the whole portfolio as text file. And the report will be named as portfolio_report(located in same directory as jar file)
+6.Select Printing portfolio on demand(as text file). It will generate a report for latest market value for all positions and the NAV of the whole portfolio as text file. And the report will be named as portfolio_report(located in same directory as jar file)
 
 ![Screenshot 2022-04-18 at 9 58 09 AM](https://user-images.githubusercontent.com/13139667/163742735-73ee55e6-fe90-4125-ac78-75a23605b350.png)
 
