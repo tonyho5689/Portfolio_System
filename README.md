@@ -112,10 +112,12 @@ Download: https://drive.google.com/file/d/1SLB-JiL2yikB6Cl_HYj0PUgWSfmp3FnP/view
 2.The structure of Portfolio report
 
 The generated report consists of Each position’s market value and Total portfolio’s NAV.
+
 •Each position’s market value
   The system will print out Sysbol, Prices, Position, Number of held and Market value for each securites under three types of asset.
+
 •Total portfolio’s NAV
-  The system will print out 
+  The portfolio’s NAV is the arithmetic sum of all positions’ market values. 
 
 3.Start Service
 
