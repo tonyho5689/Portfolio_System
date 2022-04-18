@@ -11,8 +11,6 @@ import com.example.portfolio_system.type.PositionType;
 import com.sun.istack.NotNull;
 import org.apache.commons.math3.random.AbstractRandomGenerator;
 import org.apache.commons.math3.random.RandomGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +19,6 @@ import java.util.*;
 
 @Service
 public class StockServiceImpl implements StockService {
-
-    private static Logger logger = LoggerFactory.getLogger(StockServiceImpl.class);
 
     @Autowired
     private EuropeanOptionsRepository europeanOptionsRepository;
@@ -40,18 +36,33 @@ public class StockServiceImpl implements StockService {
         //Portfolio init
 
         //Stock init
-        Stock tickerA = Stock.builder().tickerId("TSLA").price(700.0).mu(0.5).numberOfShare(2).annualizedSD(0.3).positionType(PositionType.LONG).build();
+        Stock tickerA = Stock.builder()
+                .tickerId("TSLA")
+                .price(700.0)
+                .mu(0.5)
+                .numberOfShare(2)
+                .annualizedSD(0.3)
+                .positionType(PositionType.LONG)
+                .build();
 
         Stock tickerB = Stock.builder().tickerId("AAPL").price(100.0).mu(0.8).numberOfShare(10).annualizedSD(0.9).positionType(PositionType.SHORT).build();
         List<Stock> tickerList = Arrays.asList(tickerA, tickerB);
         tickerList.forEach(this::createStock);
 
         //Call Option init
-        EuropeanOptions optionsA1 = EuropeanOptions.builder().tickerId("TSLA123").strikePrice(750.0).maturityYear(2).stock(tickerA).numberOfContracts(2).optionsType(OptionsType.CALL).positionType(PositionType.LONG).build();
+        EuropeanOptions optionsA1 = EuropeanOptions.builder().optionId("TSLA123").strikePrice(750.0).maturityYear(2).stock(tickerA).numberOfContracts(2).optionsType(OptionsType.CALL).positionType(PositionType.LONG).build();
 
-        EuropeanOptions optionsA2 = EuropeanOptions.builder().tickerId("TSLA456").strikePrice(800.0).maturityYear(2).stock(tickerA).numberOfContracts(3).optionsType(OptionsType.PUT).positionType(PositionType.SHORT).build();
+        EuropeanOptions optionsA2 = EuropeanOptions.builder()
+                .optionId("TSLA456")
+                .strikePrice(800.0)
+                .maturityYear(2)
+                .stock(tickerA)
+                .numberOfContracts(3)
+                .optionsType(OptionsType.PUT)
+                .positionType(PositionType.SHORT)
+                .build();
 
-        EuropeanOptions optionsB = EuropeanOptions.builder().tickerId("AAPL123").strikePrice(200.0).maturityYear(2).stock(tickerB).numberOfContracts(4).optionsType(OptionsType.PUT).positionType(PositionType.LONG).build();
+        EuropeanOptions optionsB = EuropeanOptions.builder().optionId("AAPL123").strikePrice(200.0).maturityYear(2).stock(tickerB).numberOfContracts(4).optionsType(OptionsType.PUT).positionType(PositionType.LONG).build();
         List<EuropeanOptions> optionsList = Arrays.asList(optionsA1, optionsA2, optionsB);
         optionsList.forEach(options -> europeanOptionsService.createOptions(options));
 

@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 public class EuropeanOptionPrice {
 
-    private static Logger logger = LoggerFactory.getLogger(EuropeanOptionPrice.class);
     private final double currPrice;
     private final double strikePrice;
     private final int interestRate;
@@ -49,7 +48,6 @@ public class EuropeanOptionPrice {
         double cPart2 = (strikePrice) * (FastMath.exp(-1 * (interestRate/100) * maturityYear)) * (normalDistribution.cumulativeProbability(d2));
         Double cPrice = cPart1 - cPart2;
 
-//        logger.info("====validate call options Price: {}, D1: {}, D2: {}, K: {}, exp part: {}, S: {}, volatility:{} ", cPrice, d1, d2, strikePrice, FastMath.exp(-1 * interestRate * maturityYear), currPrice, annualizedSD);
         return cPrice;
     }
 
@@ -62,7 +60,6 @@ public class EuropeanOptionPrice {
         double pPart2 = currPrice * (normalDistribution.cumulativeProbability(1 - d1));
         Double pPrice = pPart1 - pPart2;
 
-//        logger.info("====validate put options Price: {}, D1: {}, D2: {}, K: {}, exp part: {}, S: {}, volatility:{} ", pPrice, d1, d2, strikePrice, FastMath.exp(-1 * interestRate * maturityYear), currPrice, annualizedSD);
         return pPrice;
     }
 

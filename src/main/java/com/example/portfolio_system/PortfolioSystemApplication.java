@@ -2,8 +2,6 @@ package com.example.portfolio_system;
 
 import com.example.portfolio_system.controller.PortfolioController;
 import com.example.portfolio_system.type.ListenMode;
-import com.example.portfolio_system.utility.CreateFile;
-import com.example.portfolio_system.utility.WriteToFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,9 +14,6 @@ public class PortfolioSystemApplication implements CommandLineRunner {
 
     @Autowired
     private PortfolioController portfolioController;
-
-    CreateFile createFile = new CreateFile();
-    WriteToFile writeFile = new WriteToFile();
 
     public static void main(String[] args) {
         SpringApplication.run(PortfolioSystemApplication.class, args);
@@ -53,7 +48,7 @@ public class PortfolioSystemApplication implements CommandLineRunner {
                     portfolioController.filePrinter();
                     break;
                 default:
-                    System.out.println("Please retry");
+                    System.out.println("No Such Option! Please retry");
                     break;
             }
             if (input.equals("1")) break;

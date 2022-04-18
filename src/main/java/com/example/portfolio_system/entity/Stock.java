@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 public class Stock {
 
-    private static Logger logger = LoggerFactory.getLogger(Stock.class);
+//    private static Logger logger = LoggerFactory.getLogger(Stock.class);
 
     @Id
     @Column(nullable = false)
@@ -55,6 +55,5 @@ public class Stock {
     //lifecycle callback
     @PostPersist
     public void postPersist() {
-        logger.info("Persisted a stock: {}", this);
     }
 }

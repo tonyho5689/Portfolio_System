@@ -59,13 +59,13 @@ public class PortfolioController {
         System.out.println("Type: European Call Options                      ");
         List<EuropeanOptions> heldCallOptions = heldOptions.stream().filter(c -> c.getOptionsType().equals(OptionsType.CALL)).collect(Collectors.toList());
         heldCallOptions.forEach(callOptions -> {
-            System.out.println(String.format("Symbol: %s | Contract Price: %s |Position: %s | Number of Contract: %s | Market Value: %s ", callOptions.getTickerId(), callOptions.getTheoreticalPrice(), callOptions.getPositionType(), callOptions.getNumberOfContracts(), callOptions.getMarketValue()));
+            System.out.println(String.format("Symbol: %s | Contract Price: %s |Position: %s | Number of Contract: %s | Market Value: %s ", callOptions.getOptionId(), callOptions.getTheoreticalPrice(), callOptions.getPositionType(), callOptions.getNumberOfContracts(), callOptions.getMarketValue()));
         });
 
         System.out.println("Type: European Put Options                       ");
         List<EuropeanOptions> heldPutOptions = heldOptions.stream().filter(c -> c.getOptionsType().equals(OptionsType.PUT)).collect(Collectors.toList());
         heldPutOptions.forEach(putOptions -> {
-            System.out.println(String.format("Symbol: %s | Contract Price: %s |Position: %s | Number of Contract: %s | Market Value: %s ", putOptions.getTickerId(), putOptions.getTheoreticalPrice(), putOptions.getPositionType(), putOptions.getNumberOfContracts(), putOptions.getMarketValue()));
+            System.out.println(String.format("Symbol: %s | Contract Price: %s |Position: %s | Number of Contract: %s | Market Value: %s ", putOptions.getOptionId(), putOptions.getTheoreticalPrice(), putOptions.getPositionType(), putOptions.getNumberOfContracts(), putOptions.getMarketValue()));
         });
         System.out.println(">>>>>>>Total portfolio’s NAV");
         double totalNav = europeanOptionsService.getAllOptionsNAV() + stockService.getAllCommonStockNAV();
@@ -93,13 +93,13 @@ public class PortfolioController {
             stringList.add("Type: European Call Options                      ");
             List<EuropeanOptions> heldCallOptions = heldOptions.stream().filter(c -> c.getOptionsType().equals(OptionsType.CALL)).collect(Collectors.toList());
             heldCallOptions.forEach(callOptions -> {
-                stringList.add(String.format("Symbol: %s | Contract Price: %s |Position: %s | Number of Contract: %s | Market Value: %s ", callOptions.getTickerId(), callOptions.getTheoreticalPrice(), callOptions.getPositionType(), callOptions.getNumberOfContracts(), callOptions.getMarketValue()));
+                stringList.add(String.format("Symbol: %s | Contract Price: %s |Position: %s | Number of Contract: %s | Market Value: %s ", callOptions.getOptionId(), callOptions.getTheoreticalPrice(), callOptions.getPositionType(), callOptions.getNumberOfContracts(), callOptions.getMarketValue()));
             });
 
             stringList.add("Type: European Put Options                       ");
             List<EuropeanOptions> heldPutOptions = heldOptions.stream().filter(c -> c.getOptionsType().equals(OptionsType.PUT)).collect(Collectors.toList());
             heldPutOptions.forEach(putOptions -> {
-                stringList.add(String.format("Symbol: %s | Contract Price: %s |Position: %s | Number of Contract: %s | Market Value: %s ", putOptions.getTickerId(), putOptions.getTheoreticalPrice(), putOptions.getPositionType(), putOptions.getNumberOfContracts(), putOptions.getMarketValue()));
+                stringList.add(String.format("Symbol: %s | Contract Price: %s |Position: %s | Number of Contract: %s | Market Value: %s ", putOptions.getOptionId(), putOptions.getTheoreticalPrice(), putOptions.getPositionType(), putOptions.getNumberOfContracts(), putOptions.getMarketValue()));
             });
             stringList.add(">>>>>>>Total portfolio’s NAV");
             double totalNav = europeanOptionsService.getAllOptionsNAV() + stockService.getAllCommonStockNAV();

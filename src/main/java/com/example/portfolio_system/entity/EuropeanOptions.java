@@ -16,12 +16,12 @@ public class EuropeanOptions {
     @Id
     @Column(nullable = false)
     @NotNull
-    private String tickerId;
+    private String optionId;
 
     @Column(columnDefinition = "Decimal(10,2)")
     private Double theoreticalPrice;
     @Column(columnDefinition = "Decimal(10,2)")
-    private Double marketValue;
+        private Double marketValue;
 
     //static(remain unchanged) fields
     @Column(nullable = false, updatable = false)

@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 @EnableScheduling
 public class SecuritiesMockDataFeed implements SchedulingConfigurer {
 
-    private static Logger logger = LoggerFactory.getLogger(SecuritiesMockDataFeed.class);
+//    private static Logger logger = LoggerFactory.getLogger(SecuritiesMockDataFeed.class);
 
     @Autowired
     private StockService stockService;

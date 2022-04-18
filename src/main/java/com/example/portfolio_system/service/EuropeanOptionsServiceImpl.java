@@ -8,8 +8,6 @@ import com.example.portfolio_system.repository.StockRepository;
 import com.example.portfolio_system.type.OptionsType;
 import com.example.portfolio_system.type.PositionType;
 import com.sun.istack.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +18,6 @@ import java.util.Optional;
 @Service
 public class EuropeanOptionsServiceImpl implements EuropeanOptionsService {
 
-    private static Logger logger = LoggerFactory.getLogger(EuropeanOptionsServiceImpl.class);
 
     @Autowired
     private EuropeanOptionsRepository europeanOptionsRepository;
@@ -35,7 +32,7 @@ public class EuropeanOptionsServiceImpl implements EuropeanOptionsService {
     public EuropeanOptions createOptions(EuropeanOptions europeanOptions) {
 
         // duplicated options validation
-        Optional<EuropeanOptions> optionalOptions = getOptionsById(europeanOptions.getTickerId());
+        Optional<EuropeanOptions> optionalOptions = getOptionsById(europeanOptions.getOptionId());
         if (optionalOptions.isPresent()) {
             throw new IllegalStateException("Duplicated options when createOptions");
         }
@@ -64,7 +61,7 @@ public class EuropeanOptionsServiceImpl implements EuropeanOptionsService {
     @Override
     public EuropeanOptions updateOptions(EuropeanOptions europeanOptions) {
 
-        Optional<EuropeanOptions> optionalOptions = getOptionsById(europeanOptions.getTickerId());
+        Optional<EuropeanOptions> optionalOptions = getOptionsById(europeanOptions.getOptionId());
         // options existence validation
         if (optionalOptions.isEmpty()) {
             throw new IllegalStateException("Options is not found when updateOptions");
